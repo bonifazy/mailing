@@ -1,0 +1,38 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+media
+mailing/migrations/
+static/
+
+# Backup files # 
+*.bak 
+
+# PyCharm #
+.idea/
+
+# Python # 
+*.py[cod] 
+*$py.class 
+
+# Distribution / packaging
+*.manifest 
+
+# Installer logs 
+pip-log.txt 
+pip-delete-this-directory.txt 
+
+# pyenv 
+.python-version 
+
+# celery 
+celerybeat-schedule.* 
+
+# Environments 
+.env
+env/ 
+
+# MacOS
+.DS_Store

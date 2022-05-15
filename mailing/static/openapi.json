@@ -1,0 +1,575 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Сервис управления рассылками API администрирования и получения статистики.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/client/": {
+      "post": {
+        "operationId": "createClient",
+        "description": "Добавления нового клиента в справочник со всеми его атрибутами.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Client"
+              },
+              "example": {
+                "number": 79057003050,
+                "tag": "#AzbukaVkusa",
+                "zone": "Europe/Moscow"
+              }
+            }
+          },
+          "description": "Запрос для создания клиента."
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            },
+            "description": "Ответ сервера об успешном создании клиента."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      }
+    },
+    "/api/client/{pk}/": {
+      "put": {
+        "operationId": "updateClient",
+        "description": "Обновление данных атрибутов клиента.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pk",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int16"
+            },
+            "example": 1,
+            "description": "ID клиента."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Client"
+              },
+              "example": {
+                "tag": "#EuroSpar"
+              }
+            }
+          },
+          "description": "Пример запроса для обновления атрибута клиента. В тексте запроса допустимо, как смена одного атрибута, так и всех обязательных атрибутов."
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                },
+                "example": {
+                  "id": 1,
+                  "number": 79057003050,
+                  "code": 905,
+                  "tag": "#EuroSpar",
+                  "zone": "Europe/Moscow"
+                }
+              }
+            },
+            "description": "Ответ сервера об успешном обновлении атрибутов клиента."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      },
+      "delete": {
+        "operationId": "destroyClient",
+        "description": "Удаления клиента из справочника.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pk",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int16"
+            },
+            "example": 1,
+            "description": "ID клиента."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                },
+                "example": {
+                  "id": 1,
+                  "number": 79057003050,
+                  "code": 905,
+                  "tag": "#EuroSpar",
+                  "zone": "Europe/Moscow"
+                }
+              }
+            },
+            "description": "Ответ сервера об успешном удалении клиента."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      }
+    },
+    "/api/mailing/": {
+      "get": {
+        "operationId": "listStatsMailings",
+        "description": "Получения общей статистики по созданным рассылкам и количеству отправленных сообщений по ним с группировкой по статусам.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MailingStat"
+                  }
+                }
+              }
+            },
+            "description": "Статистика рассылок с группировкой по статусам."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      },
+      "post": {
+        "operationId": "createMailing",
+        "description": "Добавления новой рассылки в справочник со всеми её атрибутами.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mailing"
+              },
+              "example": {
+                "starts_at": "2022-05-08 08:00:00",
+                "expired_at": "2022-05-08 20:00:00",
+                "filter": "#AzbukaVkusa",
+                "text": "Распродажа к 9 мая!"
+              }
+            }
+          },
+          "description": "Запрос для создания рассылки."
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mailing"
+                }
+              }
+            },
+            "description": "Пример ответа об успешном создании рассылки."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      }
+    },
+    "/api/mailing/{pk}/": {
+      "get": {
+        "operationId": "retrieveStatsMailingPK",
+        "description": "Получения детальной статистики отправленных сообщений по конкретной рассылке.",
+        "parameters": [
+          {
+            "name": "pk",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int16"
+            },
+            "example": 1,
+            "description": "ID рассылки."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MailingDetailStat"
+                  }
+                }
+              }
+            },
+            "description": "Подробная статистика отправленных сообщений."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      },
+      "put": {
+        "operationId": "updateMailing",
+        "description": "Обновление данных атрибутов рассылки.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pk",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int16"
+            },
+            "example": 1,
+            "description": "ID рассылки."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mailing"
+              },
+              "example": {
+                "filter": "#EuroSpar"
+              }
+            }
+          },
+          "description": "Пример запроса для обновления атрибута рассылки.'"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mailing"
+                },
+                "example": {
+                  "id": 1,
+                  "starts_at": "2022-05-08 08:00:00",
+                  "expired_at": "2022-05-08 20:00:00",
+                  "filter": "#EuroSpar",
+                  "text": "Распродажа к 9 мая!"
+                }
+              }
+            },
+            "description": "Ответ сервера об успешном обновлении атрибутов рассылки."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      },
+      "delete": {
+        "operationId": "destroyMailing",
+        "description": "Удаление рассылки.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pk",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int16"
+            },
+            "example": 1,
+            "description": "ID рассылки."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mailing"
+                }
+              }
+            },
+            "description": "Ответ сервера об успешном удалении рассылки."
+          },
+          "404": {
+            "description": "Ошибка в запросе."
+          }
+        },
+        "tags": [
+          "api"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Client": {
+        "description": "Формат модели клиента.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 1,
+            "example": 1,
+            "description": "ID клиента."
+          },
+          "number": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 70000000000,
+            "maximum": 79999999999,
+            "example": 79057003050,
+            "description": "Номер телефона клиента в формате 7XXXXXXXXXX (X - цифра от 0 до 9)."
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "maximum": 999,
+            "example": 905,
+            "description": "Код мобильного оператора формата, XXX (создается автоматически по номеру телефона)."
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "#AzbukaVkusa",
+            "description": "Тег для фильтрации рассылок."
+          },
+          "zone": {
+            "type": "string",
+            "maxLength": 32,
+            "example": "Europe/Moscow",
+            "description": "Часовой пояс клиента."
+          }
+        },
+        "required": [
+          "number",
+          "tag",
+          "zone"
+        ]
+      },
+      "Mailing": {
+        "description": "Формат модели рассылки.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 1,
+            "example": 1,
+            "description": "ID рассылки."
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2022-05-08 08:00:00",
+            "description": "Дата и время запуска рассылки."
+          },
+          "expired_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2022-05-08 20:00:00",
+            "description": "Дата и время окончания рассылки."
+          },
+          "filter": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "#AzbukaVkusa",
+            "description": "Фильтр свойств клиентов, на которых должна быть произведена рассылка (код мобильного оператора, тег)."
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "Распродажа к 9 мая!",
+            "description": "Текст сообщения для доставки клиенту."
+          }
+        },
+        "required": [
+          "starts_at",
+          "expired_at",
+          "filter",
+          "text"
+        ]
+      },
+      "MailingStat": {
+        "type": "object",
+        "description": "Краткая статистика рассылки.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 1,
+            "example": 1,
+            "description": "ID рассылки."
+          },
+          "starts_at": {
+            "type": "string",
+            "maxLength": 20,
+            "example": "2022-05-08 08:00:00",
+            "description": "Дата и время запуска рассылки."
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 50,
+            "example": "Распродажа к 9 мая!",
+            "description": "Текст сообщения для доставки клиенту. Для краткости, отображаются первые 50 символов сообщения."
+          },
+          "messages_status": {
+            "$ref": "#/components/schemas/MessagesStatus"
+          }
+        }
+      },
+      "MailingDetailStat": {
+        "type": "object",
+        "description": "Подробная статистика рассылки.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int16",
+            "example": 1,
+            "description": "ID рассылки."
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 50,
+            "example": "Распродажа к 9 мая!",
+            "description": "Текст сообщения для доставки клиенту."
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2022-05-08 08:00:00",
+            "description": "Дата и время запуска рассылки."
+          },
+          "expired_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2022-05-08 20:00:00",
+            "description": "Дата и время окончания рассылки."
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "#AzbukaVkusa",
+            "description": "Фильтр свойств клиентов, на которых должна быть произведена рассылка (код мобильного оператора, тег)."
+          },
+          "messages_status": {
+            "$ref": "#/components/schemas/MessagesStatus"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      },
+      "MessagesStatus": {
+        "type": "object",
+        "description": "Сгруппированные статусы рассылки.",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 0,
+            "example": 100,
+            "description": "Общее количество созданных сообщений по заданному фильтру по клиентам."
+          },
+          "new": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 0,
+            "example": 15,
+            "description": "Новые неотправленные сообщения."
+          },
+          "sent": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 0,
+            "example": 75,
+            "description": "Отправленные сообщения."
+          },
+          "failure": {
+            "type": "integer",
+            "format": "int16",
+            "minimum": 0,
+            "example": 10,
+            "description": "Неотправленные сообщения с истекшим временем отправки. Не удалось вовремя отправить."
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "description": "Краткая статистика статуса сообщения.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int16",
+            "example": 1,
+            "description": "ID сообщения."
+          },
+          "client": {
+            "type": "integer",
+            "format": "int64",
+            "example": 79057003050,
+            "description": "Клиент, которому адресовано сообщение."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "sent",
+              "failure"
+            ],
+            "example": "sent",
+            "description": "Статус отправки сообщения: new-- новое (не отправлено), sent-- успешно отправлено, failure-- не удалось отправить. Истекло время отправки."
+          }
+        }
+      }
+    }
+  }
+}
